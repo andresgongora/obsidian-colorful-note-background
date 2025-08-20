@@ -1,6 +1,6 @@
 import { Plugin, TFile, MarkdownView, WorkspaceLeaf } from 'obsidian';
 
-import { SettingsTab, ColorBorderSettings, DEFAULT_SETTINGS, ColorRule, RuleType } from './settingsTab';
+import { SettingsTab, ColorBackgroundSettings, DEFAULT_SETTINGS, ColorRule, RuleType } from './settingsTab';
 
 export const checkPath = (currentPath: string, folder: string): boolean => {
     // return currentPath.includes(folder);
@@ -8,8 +8,21 @@ export const checkPath = (currentPath: string, folder: string): boolean => {
     return parts.includes(folder);
 }
 
-export default class ColorfulNoteBordersPlugin extends Plugin {
-    settings: ColorBorderSettings;
+export function hexToRgbA(hex: string, alpha: number): string {
+    let c = hex.replace('#', '');
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    const num = parseInt(c, 16);
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+    return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// Store document.head reference once, for performance reasons.
+const docHead = document.head;
+
+export default class ColorfulNoteBackgroundPlugin extends Plugin {
+    settings: ColorBackgroundSettings;
 
     async onload() {
         await this.loadSettings();
@@ -73,22 +86,29 @@ export default class ColorfulNoteBordersPlugin extends Plugin {
     }
 
     async updateStyles() {
-        this.settings.colorRules.forEach((rule) => this.updateStyle(rule));
+        this.settings.colorRules.forEach((rule: ColorRule) => this.updateStyle(rule));
     }
+
     async updateStyle(rule: ColorRule) {
         const styleName = this.makeStyleName(rule);
+        const alpha = typeof rule.alpha === "number" ? rule.alpha : 1.0;
+        const rgbaColor = hexToRgbA(rule.color, alpha);
+
         this.updateCustomCSS(styleName, `
-			.${styleName} {
-				border: 5px solid ${rule.color} !important;
-			}
-		`);
+        .${styleName} {
+            background:
+            linear-gradient(${rgbaColor}, ${rgbaColor}),
+            var(--background-secondary);
+            background-blend-mode: normal;
+        }
+        `);
     }
 
     addCustomCSS(cssstylename: string, css: string) {
         const styleElement = document.createElement('style');
         styleElement.id = cssstylename;
         styleElement.innerText = css;
-        document.head.appendChild(styleElement);
+        docHead.appendChild(styleElement); // Use stored reference
     }
     updateCustomCSS(cssstylename: string, css: string) {
         const styleElement = document.getElementById(cssstylename);
@@ -151,7 +171,10 @@ export default class ColorfulNoteBordersPlugin extends Plugin {
 
     unhighlightNote(element: Element) {
         this.settings.colorRules.forEach((rule) => {
-            element.classList.remove(this.makeStyleName(rule));
+            const styleName = this.makeStyleName(rule);
+            if (element.classList.contains(styleName)) {
+                element.classList.remove(styleName);
+            }
         });
     }
 

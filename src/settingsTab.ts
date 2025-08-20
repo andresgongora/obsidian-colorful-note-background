@@ -1,5 +1,5 @@
 import { App, PluginSettingTab, Setting, TextComponent, ButtonComponent, DropdownComponent, ColorComponent } from 'obsidian';
-import ColorfulNoteBordersPlugin from './main';
+import ColorfulNoteBackgroundPlugin from './main';
 
 export enum RuleType {
     Folder = "folder",
@@ -11,39 +11,43 @@ export interface ColorRule {
     value: string;
     type: RuleType;
     color: string;
+    alpha?: number;
 }
 
-export class ColorBorderSettings {
+export class ColorBackgroundSettings {
     colorRules: ColorRule[] = [];
 }
 
-export const DEFAULT_SETTINGS: ColorBorderSettings = {
+export const DEFAULT_SETTINGS: ColorBackgroundSettings = {
     colorRules: [
         {
             id: "inbox-ffb300",
             value: "Inbox",
             type: RuleType.Folder,
-            color: "#ffb300"
+            color: "#ffb300",
+            alpha: 0.04
         },
         {
             id: "frontmatter-public-499749",
             value: "category: public",
             type: RuleType.Frontmatter,
-            color: "#499749"
+            color: "#499749",
+            alpha: 0.04
         },
         {
             id: "frontmatter-private-c44545",
             value: "category: private",
             type: RuleType.Frontmatter,
-            color: "#c44545"
+            color: "#c44545",
+            alpha: 0.04
         }
     ],
 };
 
 export class SettingsTab extends PluginSettingTab {
-    plugin: ColorfulNoteBordersPlugin;
+    plugin: ColorfulNoteBackgroundPlugin;
 
-    constructor(app: App, plugin: ColorfulNoteBordersPlugin) {
+    constructor(app: App, plugin: ColorfulNoteBackgroundPlugin) {
         super(app, plugin);
         this.plugin = plugin;
     }
@@ -51,7 +55,7 @@ export class SettingsTab extends PluginSettingTab {
     display(): void {
         let { containerEl } = this;
         containerEl.empty();
-        containerEl.createEl('h1', { text: 'Colorful Note Borders Settings' });
+        containerEl.createEl('h1', { text: 'Colorful Note Background Settings' });
 
         // Create a header row
         const headerRow = containerEl.createEl('div', { cls: 'cnb-rule-settings-header-row' });
@@ -60,6 +64,7 @@ export class SettingsTab extends PluginSettingTab {
         headerRow.createEl('span', { text: 'Rule Type', cls: 'cnb-rule-settings-column-rule-type' });
         headerRow.createEl('span', { text: 'Value', cls: 'cnb-rule-settings-column-rule-value' });
         headerRow.createEl('span', { text: 'Color', cls: 'cnb-rule-settings-column-rule-color' });
+        headerRow.createEl('span', { text: 'Alpha', cls: 'cnb-rule-settings-column-rule-alpha' });
         headerRow.createEl('span', { text: '', cls: 'cnb-rule-settings-column-rule-button' });
 
         const rulesContainer = containerEl.createEl('div', { cls: 'cnb-rules-container' });
@@ -76,6 +81,7 @@ export class SettingsTab extends PluginSettingTab {
                     value: '',
                     type: RuleType.Folder,
                     color: '#000000',
+                    alpha: 0.04,
                 };
                 this.plugin.settings.colorRules.push(newRule);
                 this.addRuleSetting(rulesContainer, newRule);
@@ -90,8 +96,8 @@ export class SettingsTab extends PluginSettingTab {
     ): void {
         const ruleSettingDiv = containerEl.createEl('div', { cls: 'cnb-rule-settings-row' });
 
+        // Type
         new Setting(ruleSettingDiv)
-            // .setName('Type')
             .setClass('cnb-rule-setting-item')
             .addDropdown((dropdown: DropdownComponent) => {
                 dropdown.addOption(RuleType.Folder, 'Folder');
@@ -104,8 +110,8 @@ export class SettingsTab extends PluginSettingTab {
                 dropdown.selectEl.classList.add('cnb-rule-type-dropdown');
             });
 
+        // Value
         new Setting(ruleSettingDiv)
-            // .setName('Value')
             .setClass('cnb-rule-setting-item')
             .addText((text) => {
                 text.setPlaceholder('Enter rule value');
@@ -117,12 +123,11 @@ export class SettingsTab extends PluginSettingTab {
                 text.inputEl.classList.add('cnb-rule-value-input');
             });
 
+        // Color
         const colorSetting = new Setting(ruleSettingDiv)
             .setClass('cnb-rule-setting-item');
-        // .setName('Color');
-        // colorSetting.settingEl.style.gridColumn = '3';
 
-        const colorInput = new TextComponent(colorSetting.controlEl)
+            const colorInput = new TextComponent(colorSetting.controlEl)
             .setPlaceholder('Enter color hex code')
             .setValue(rule.color);
         colorInput.inputEl.classList.add('cnb-rule-setting-item-text-input');
@@ -143,6 +148,27 @@ export class SettingsTab extends PluginSettingTab {
             }
         });
 
+        // Alpha
+        new Setting(ruleSettingDiv)
+            .setClass('cnb-rule-setting-item')
+            .addText((text) => {
+            text.setPlaceholder('Alpha (0.0 - 1.0)');
+            text.setValue(rule.alpha?.toString() ?? '1.0');
+            text.inputEl.type = 'number';
+            text.inputEl.step = '0.001';
+            text.inputEl.min = '0';
+            text.inputEl.max = '1';
+            text.onChange((value) => {
+                const num = parseFloat(value);
+                if (!isNaN(num) && num >= 0 && num <= 1) {
+                rule.alpha = num;
+                this.plugin.saveSettings();
+                }
+            });
+            text.inputEl.classList.add('cnb-rule-alpha-input');
+            });
+
+        // Up
         new ButtonComponent(ruleSettingDiv)
             .setButtonText('▲')
             // .setIcon("up-arrow")
@@ -158,6 +184,7 @@ export class SettingsTab extends PluginSettingTab {
                 }
             });
 
+        // Down
         new ButtonComponent(ruleSettingDiv)
             .setButtonText('▼')
             // .setIcon("down-arrow")
@@ -173,16 +200,18 @@ export class SettingsTab extends PluginSettingTab {
                 }
             });
 
-        new ButtonComponent(ruleSettingDiv)
-            .setButtonText('Remove')
-            // .setIcon('remove')
-            // .setTooltip("Remove")
-            .setClass('cnb-rule-setting-item-remove-button')
-            .setCta().onClick(() => {
-                this.plugin.settings.colorRules = this.plugin.settings.colorRules.filter((r) => r.id !== rule.id);
-                this.plugin.saveSettings();
-                this.plugin.removeStyle(rule);
-                ruleSettingDiv.remove();
+        // Remove
+        new Setting(ruleSettingDiv)
+            .setClass('cnb-rule-setting-item-remove')
+            .addExtraButton((btn) => {
+                btn.setIcon('cross')
+                    .setTooltip('Remove')
+                    .onClick(() => {
+                        this.plugin.settings.colorRules = this.plugin.settings.colorRules.filter((r) => r.id !== rule.id);
+                        this.plugin.saveSettings();
+                        this.plugin.removeStyle(rule);
+                        ruleSettingDiv.remove();
+                    });
             });
     }
 }

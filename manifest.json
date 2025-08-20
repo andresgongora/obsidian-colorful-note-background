@@ -1,9 +1,9 @@
 {
-	"id": "colorful-note-borders",
-	"name": "Colorful Note Borders",
-	"version": "0.2.4",
+	"id": "colorful-note-bacgkground",
+	"name": "Colorful Note Background",
+	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Add customizable colorful borders to notes based on folder location or frontmatter metadata, enhancing visual organization in Obsidian.",
-	"author": "rusi",
+	"description": "Set note background based on file location or frontmatter metadata.",
+	"author": "rusi & andresgongora",
 	"isDesktopOnly": false
 }

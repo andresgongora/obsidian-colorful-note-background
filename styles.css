@@ -1,4 +1,3 @@
-
 .cnb-rules-container {
 	margin-bottom: 1em;
 	border-top: 1px solid var(--background-modifier-border);
@@ -20,19 +19,20 @@
 
 .cnb-rule-settings-header-row {
 	display: grid;
-	grid-template-columns: 2fr 2fr 2fr 0.5fr 0.5fr 0.5fr;
-	/* gap: 10px; */
+	grid-template-columns: 1.2fr 1.5fr 1.5fr 1.2fr 0.5fr 0.5fr 0.5fr;
 	font-weight: bold;
 	align-items: center;
 	margin-bottom: 10px;
 }
 
+.cnb-rule-settings-header-row span {
+    text-align: center;
+}
+
 .cnb-rule-settings-row {
 	display: grid;
-	grid-template-columns: 2fr 2fr 2fr 0.5fr 0.5fr 0.5fr;
-	/* gap: 10px; */
+	grid-template-columns: 1.2fr 1.5fr 1.5fr 1.2fr 0.5fr 0.5fr 0.5fr;
 	align-items: center;
-	/* margin-bottom: 5px; */
 }
 
 .cnb-rule-type-dropdown {
@@ -44,24 +44,6 @@
 .cnb-rule-setting-item-text-input {
 	width: 6em;
 }
-
-/*
-button.cnd-rule-setting-item-up-button,
-button.cnd-rule-setting-item-down-button,
-button.cnd-rule-setting-item-delete-button
- {
-	padding: 0;
-} */
-
-/* .cnb-rule-settings-column-rule-type {
-	width: 10em;
+.cnb-rule-alpha-input {
+    width: 4em;
 }
-.cnb-rule-settings-column-rule-value {
-	width: 10em;
-}
-.cnb-rule-settings-column-rule-color {
-	width: 6em;
-}
-.cnb-rule-settings-column-rule-button {
-	width: 6em;
-} */
