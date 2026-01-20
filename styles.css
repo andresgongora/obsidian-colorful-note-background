@@ -1,3 +1,11 @@
+/* Colorful Note Background - highlight style using CSS custom property */
+.cnb-highlighted {
+    background:
+        linear-gradient(var(--cnb-highlight-color), var(--cnb-highlight-color)),
+        var(--background-secondary);
+    background-blend-mode: normal;
+}
+
 .cnb-rules-container {
 	margin-bottom: 1em;
 	border-top: 1px solid var(--background-modifier-border);

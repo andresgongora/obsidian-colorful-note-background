@@ -97,7 +97,7 @@
 **Key Files:**
 - `src/main.ts`: Main plugin class with event handlers and style management
 - `src/settingsTab.ts`: Settings UI, ColorRule interface, RuleType enum
-- `manifest.json`: Plugin metadata (note: id has typo "bacgkround" instead of "background")
+- `manifest.json`: Plugin metadata
 - `tests/main.test.ts`: Unit tests
 - `tests/__mocks__/obsidian.ts`: Mock Obsidian API for testing
 

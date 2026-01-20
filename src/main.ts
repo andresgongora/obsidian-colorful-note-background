@@ -18,9 +18,6 @@ export function hexToRgbA(hex: string, alpha: number): string {
     return `rgba(${r},${g},${b},${alpha})`;
 }
 
-// Store document.head reference once, for performance reasons.
-const docHead = document.head;
-
 export default class ColorfulNoteBackgroundPlugin extends Plugin {
     settings: ColorBackgroundSettings;
 
@@ -41,32 +38,32 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
         );
     }
 
-    async onunload() {
-        // cleanup all custom styles
-        this.settings.colorRules.forEach((rule) => {
-            this.removeStyle(rule);
+    onunload() {
+        // cleanup all highlighted notes
+        this.app.workspace.getLeavesOfType("markdown").forEach((leaf: WorkspaceLeaf) => {
+            if (!(leaf.view instanceof MarkdownView)) return;
+            const contentView = leaf.view.containerEl.querySelector(".view-content");
+            if (contentView) {
+                this.unhighlightNote(contentView);
+            }
         });
     }
 
-    async removeStyle(rule: ColorRule) {
-        const style = this.makeStyleName(rule);
-        const styleElement = document.getElementById(style);
-        if (styleElement) {
-            styleElement.remove();
-        }
+    removeStyle(rule: ColorRule) {
+        // No-op: styles are managed via CSS custom properties now
     }
 
-    async onActiveLeafChange(activeLeaf: WorkspaceLeaf) {
+    onActiveLeafChange(activeLeaf: WorkspaceLeaf) {
         // console.log("+ active leaf change: ", activeLeaf);
         this.applyRules();
     }
 
-    async onMetadataChange(file: TFile) {
+    onMetadataChange(file: TFile) {
         // console.log("+ metadata change");
         this.applyRules(file);
     }
 
-    async onFileRename(file: TFile) {
+    onFileRename(file: TFile) {
         // console.log("+ filename change");
         this.applyRules();
     }
@@ -85,44 +82,19 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
         }
     }
 
-    async updateStyles() {
+    updateStyles() {
         this.settings.colorRules.forEach((rule: ColorRule) => this.updateStyle(rule));
     }
 
-    async updateStyle(rule: ColorRule) {
-        const styleName = this.makeStyleName(rule);
-        const alpha = typeof rule.alpha === "number" ? rule.alpha : 1.0;
-        const rgbaColor = hexToRgbA(rule.color, alpha);
-
-        this.updateCustomCSS(styleName, `
-        .${styleName} {
-            background:
-            linear-gradient(${rgbaColor}, ${rgbaColor}),
-            var(--background-secondary);
-            background-blend-mode: normal;
-        }
-        `);
+    updateStyle(rule: ColorRule) {
+        // Styles are now defined in styles.css using CSS custom properties
+        // No dynamic style injection needed
     }
 
-    addCustomCSS(cssstylename: string, css: string) {
-        const styleElement = document.createElement('style');
-        styleElement.id = cssstylename;
-        styleElement.innerText = css;
-        docHead.appendChild(styleElement); // Use stored reference
-    }
-    updateCustomCSS(cssstylename: string, css: string) {
-        const styleElement = document.getElementById(cssstylename);
-        if (styleElement) {
-            styleElement.innerText = css;
-        } else {
-            this.addCustomCSS(cssstylename, css);
-        }
-    }
-
-    async applyRules(file: TFile | null = null) {
+    applyRules(file: TFile | null = null) {
         this.app.workspace.getLeavesOfType("markdown").forEach((value: WorkspaceLeaf) => {
             if (!(value.view instanceof MarkdownView)) return;
-            const activeView = value.view as MarkdownView;
+            const activeView = value.view;
             const viewFile = activeView.file;
             if (file && file !== viewFile) return;
             const contentView = activeView.containerEl.querySelector(".view-content");
@@ -166,16 +138,15 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
     }
 
     highlightNote(element: Element, rule: ColorRule) {
-        element.classList.add(this.makeStyleName(rule));
+        const alpha = typeof rule.alpha === "number" ? rule.alpha : 1.0;
+        const rgbaColor = hexToRgbA(rule.color, alpha);
+        element.classList.add('cnb-highlighted');
+        (element as HTMLElement).style.setProperty('--cnb-highlight-color', rgbaColor);
     }
 
     unhighlightNote(element: Element) {
-        this.settings.colorRules.forEach((rule) => {
-            const styleName = this.makeStyleName(rule);
-            if (element.classList.contains(styleName)) {
-                element.classList.remove(styleName);
-            }
-        });
+        element.classList.remove('cnb-highlighted');
+        (element as HTMLElement).style.removeProperty('--cnb-highlight-color');
     }
 
     makeStyleName(rule: ColorRule): string {

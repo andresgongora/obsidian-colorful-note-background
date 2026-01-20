@@ -53,15 +53,15 @@ export class SettingsTab extends PluginSettingTab {
     }
 
     display(): void {
-        let { containerEl } = this;
+        const { containerEl } = this;
         containerEl.empty();
-        containerEl.createEl('h1', { text: 'Colorful Note Background Settings' });
+        new Setting(containerEl).setName('Colorful note background settings').setHeading();
 
         // Create a header row
         const headerRow = containerEl.createEl('div', { cls: 'cnb-rule-settings-header-row' });
 
         // Add labels for each column
-        headerRow.createEl('span', { text: 'Rule Type', cls: 'cnb-rule-settings-column-rule-type' });
+        headerRow.createEl('span', { text: 'Rule type', cls: 'cnb-rule-settings-column-rule-type' });
         headerRow.createEl('span', { text: 'Value', cls: 'cnb-rule-settings-column-rule-value' });
         headerRow.createEl('span', { text: 'Color', cls: 'cnb-rule-settings-column-rule-color' });
         headerRow.createEl('span', { text: 'Alpha', cls: 'cnb-rule-settings-column-rule-alpha' });
@@ -85,7 +85,7 @@ export class SettingsTab extends PluginSettingTab {
                 };
                 this.plugin.settings.colorRules.push(newRule);
                 this.addRuleSetting(rulesContainer, newRule);
-                this.plugin.saveSettings();
+                void this.plugin.saveSettings();
             });
     }
 
@@ -105,7 +105,7 @@ export class SettingsTab extends PluginSettingTab {
                 dropdown.setValue(rule.type);
                 dropdown.onChange((value) => {
                     rule.type = value as RuleType;
-                    this.plugin.saveSettings();
+                    void this.plugin.saveSettings();
                 });
                 dropdown.selectEl.classList.add('cnb-rule-type-dropdown');
             });
@@ -118,7 +118,7 @@ export class SettingsTab extends PluginSettingTab {
                 text.setValue(rule.value);
                 text.onChange((value) => {
                     rule.value = value;
-                    this.plugin.saveSettings();
+                    void this.plugin.saveSettings();
                 });
                 text.inputEl.classList.add('cnb-rule-value-input');
             });
@@ -137,14 +137,14 @@ export class SettingsTab extends PluginSettingTab {
             .onChange((color) => {
                 rule.color = color;
                 colorInput.setValue(color);
-                this.plugin.saveSettings();
+                void this.plugin.saveSettings();
             });
 
         colorInput.onChange((value: string) => {
             if (/^#(?:[0-9a-fA-F]{3}){1,2}$/.test(value)) {
                 rule.color = value;
                 picker.setValue(value);
-                this.plugin.saveSettings();
+                void this.plugin.saveSettings();
             }
         });
 
@@ -162,7 +162,7 @@ export class SettingsTab extends PluginSettingTab {
                 const num = parseFloat(value);
                 if (!isNaN(num) && num >= 0 && num <= 1) {
                 rule.alpha = num;
-                this.plugin.saveSettings();
+                void this.plugin.saveSettings();
                 }
             });
             text.inputEl.classList.add('cnb-rule-alpha-input');
@@ -179,7 +179,7 @@ export class SettingsTab extends PluginSettingTab {
                 if (index > 0) {
                     this.plugin.settings.colorRules.splice(index, 1);
                     this.plugin.settings.colorRules.splice(index - 1, 0, rule);
-                    this.plugin.saveSettings();
+                    void this.plugin.saveSettings();
                     this.display();
                 }
             });
@@ -195,7 +195,7 @@ export class SettingsTab extends PluginSettingTab {
                 if (index < this.plugin.settings.colorRules.length - 1) {
                     this.plugin.settings.colorRules.splice(index, 1);
                     this.plugin.settings.colorRules.splice(index + 1, 0, rule);
-                    this.plugin.saveSettings();
+                    void this.plugin.saveSettings();
                     this.display();
                 }
             });
@@ -208,7 +208,7 @@ export class SettingsTab extends PluginSettingTab {
                     .setTooltip('Remove')
                     .onClick(() => {
                         this.plugin.settings.colorRules = this.plugin.settings.colorRules.filter((r) => r.id !== rule.id);
-                        this.plugin.saveSettings();
+                        void this.plugin.saveSettings();
                         this.plugin.removeStyle(rule);
                         ruleSettingDiv.remove();
                     });
