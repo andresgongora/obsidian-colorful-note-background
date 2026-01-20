@@ -72,7 +72,7 @@
 <!------------------------------------------------------------------------------------------------->
 
 - **Code organization**: Main plugin logic in `src/main.ts`, settings UI in `src/settingsTab.ts`
-- **Style injection**: Custom CSS is dynamically injected/updated via `document.head` when rules change
+- **Styling approach**: Avoid dynamic `<style>` tags. Use `.cnb-highlighted` class with CSS custom property `--cnb-highlight-color` set inline; base rules live in `styles.css`.
 - **Rule matching**: Folder rules match any folder in the path; frontmatter rules match metadata key-value pairs
 - **Color format**: Use RGBA with alpha transparency (recommended: 0.04) for smooth theme transitions
 
@@ -112,4 +112,24 @@
 2. Metadata changes → `onMetadataChange` → `applyRules(file)`
 3. File renamed → `onFileRename` → `applyRules()`
 4. Settings saved → `saveSettings()` → `updateStyles()` → `applyRules()`
+<!-- END SCRATCHPAD BLOCK -->
+
+<!-- SCRATCHPAD BLOCK: Linting & ESLint Plugin | Created: 2026-01-20 -->
+**ESLint setup:**
+- Using flat config at `eslint.config.mjs` (ESLint v9)
+- Includes `eslint-plugin-obsidianmd` recommended config
+- TypeScript parser enabled for `**/*.ts` with project `tsconfig.json`
+- Ignores JS config files and `tests/**` to keep noise low
+
+**Key rules in use:**
+- `obsidianmd/ui/sentence-case`: UI strings in sentence case (fixed here)
+- `obsidianmd/settings-tab/no-manual-html-headings`: use `Setting(...).setHeading()` (applied)
+- `obsidianmd/no-forbidden-elements`: no dynamic `<style>` tags (replaced with CSS vars)
+
+**Commands:**
+- Lint: `npm run lint`
+
+**Notes:**
+- Aggressive TS rules like `no-unsafe-*` are disabled for this project to reduce noise
+- Styling now uses `.cnb-highlighted` + `--cnb-highlight-color` in `styles.css`
 <!-- END SCRATCHPAD BLOCK -->

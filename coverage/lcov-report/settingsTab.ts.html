@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">8.04% </span>
+                <span class="strong">8.13% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/87</span>
+                <span class='fraction'>7/86</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">8.23% </span>
+                <span class="strong">8.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/85</span>
+                <span class='fraction'>7/84</span>
             </div>
         
             
@@ -277,10 +277,7 @@
 <a name='L212'></a><a href='#L212'>212</a>
 <a name='L213'></a><a href='#L213'>213</a>
 <a name='L214'></a><a href='#L214'>214</a>
-<a name='L215'></a><a href='#L215'>215</a>
-<a name='L216'></a><a href='#L216'>216</a>
-<a name='L217'></a><a href='#L217'>217</a>
-<a name='L218'></a><a href='#L218'>218</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L215'></a><a href='#L215'>215</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -457,7 +454,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -468,7 +464,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -489,7 +484,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -554,7 +548,7 @@ export class SettingsTab extends PluginSettingTab {
 <span class="fstat-no" title="function not covered" >    display(</span>): void {
         const { containerEl } = <span class="cstat-no" title="statement not covered" >this;</span>
 <span class="cstat-no" title="statement not covered" >        containerEl.empty();</span>
-<span class="cstat-no" title="statement not covered" >        new Setting(containerEl).setName('Colorful note background settings').setHeading();</span>
+<span class="cstat-no" title="statement not covered" >        new Setting(containerEl).setName('Note background rules').setHeading();</span>
 &nbsp;
         // Create a header row
         const headerRow = <span class="cstat-no" title="statement not covered" >containerEl.createEl('div', { cls: 'cnb-rule-settings-header-row' });</span>
@@ -670,8 +664,7 @@ export class SettingsTab extends PluginSettingTab {
         // Up
 <span class="cstat-no" title="statement not covered" >        new ButtonComponent(ruleSettingDiv)</span>
             .setButtonText('▲')
-            // .setIcon("up-arrow")
-            .setTooltip("Move Up")
+            .setTooltip("Move up")
             .setClass('cnb-rule-setting-item-up-button')
             .setDisabled(index == 0)
             .onClick(<span class="fstat-no" title="function not covered" >() =</span>&gt; {
@@ -686,8 +679,7 @@ export class SettingsTab extends PluginSettingTab {
         // Down
 <span class="cstat-no" title="statement not covered" >        new ButtonComponent(ruleSettingDiv)</span>
             .setButtonText('▼')
-            // .setIcon("down-arrow")
-            .setTooltip("Move Down")
+            .setTooltip("Move down")
             .setClass('cnb-rule-setting-item-down-button')
             .setDisabled(index == this.plugin.settings.colorRules.length - 1)
             .onClick(<span class="fstat-no" title="function not covered" >() =</span>&gt; {
@@ -708,7 +700,6 @@ export class SettingsTab extends PluginSettingTab {
                     .onClick(<span class="fstat-no" title="function not covered" >() =</span>&gt; {
 <span class="cstat-no" title="statement not covered" >                        this.plugin.settings.colorRules = this.plugin.settings.colorRules.filter(<span class="fstat-no" title="function not covered" >(r</span>) =&gt; <span class="cstat-no" title="statement not covered" >r.id !== rule.id)</span>;</span>
 <span class="cstat-no" title="statement not covered" >                        void this.plugin.saveSettings();</span>
-<span class="cstat-no" title="statement not covered" >                        this.plugin.removeStyle(rule);</span>
 <span class="cstat-no" title="statement not covered" >                        ruleSettingDiv.remove();</span>
                     });
             });
@@ -721,7 +712,7 @@ export class SettingsTab extends PluginSettingTab {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-20T11:35:24.391Z
+                at 2026-01-20T12:03:37.834Z
             </div>
         <script src="prettify.js"></script>
         <script>

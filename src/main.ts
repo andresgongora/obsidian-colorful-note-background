@@ -49,10 +49,6 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
         });
     }
 
-    removeStyle(rule: ColorRule) {
-        // No-op: styles are managed via CSS custom properties now
-    }
-
     onActiveLeafChange(activeLeaf: WorkspaceLeaf) {
         // console.log("+ active leaf change: ", activeLeaf);
         this.applyRules();
@@ -70,25 +66,14 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
 
     async loadSettings() {
         this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-        this.updateStyles();
     }
 
     async saveSettings() {
         await this.saveData(this.settings);
-        this.updateStyles();
         const activeFile = this.app.workspace.getActiveFile();
         if (activeFile) {
             this.onFileRename(activeFile);
         }
-    }
-
-    updateStyles() {
-        this.settings.colorRules.forEach((rule: ColorRule) => this.updateStyle(rule));
-    }
-
-    updateStyle(rule: ColorRule) {
-        // Styles are now defined in styles.css using CSS custom properties
-        // No dynamic style injection needed
     }
 
     applyRules(file: TFile | null = null) {
@@ -96,6 +81,7 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
             if (!(value.view instanceof MarkdownView)) return;
             const activeView = value.view;
             const viewFile = activeView.file;
+            if (!viewFile) return;
             if (file && file !== viewFile) return;
             const contentView = activeView.containerEl.querySelector(".view-content");
             if (!contentView) return;
@@ -147,9 +133,5 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
     unhighlightNote(element: Element) {
         element.classList.remove('cnb-highlighted');
         (element as HTMLElement).style.removeProperty('--cnb-highlight-color');
-    }
-
-    makeStyleName(rule: ColorRule): string {
-        return `cnb-${rule.id}-style`;
     }
 }

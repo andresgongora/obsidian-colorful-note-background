@@ -55,7 +55,7 @@ export class SettingsTab extends PluginSettingTab {
     display(): void {
         const { containerEl } = this;
         containerEl.empty();
-        new Setting(containerEl).setName('Colorful note background settings').setHeading();
+        new Setting(containerEl).setName('Note background rules').setHeading();
 
         // Create a header row
         const headerRow = containerEl.createEl('div', { cls: 'cnb-rule-settings-header-row' });
@@ -171,8 +171,7 @@ export class SettingsTab extends PluginSettingTab {
         // Up
         new ButtonComponent(ruleSettingDiv)
             .setButtonText('▲')
-            // .setIcon("up-arrow")
-            .setTooltip("Move Up")
+            .setTooltip("Move up")
             .setClass('cnb-rule-setting-item-up-button')
             .setDisabled(index == 0)
             .onClick(() => {
@@ -187,8 +186,7 @@ export class SettingsTab extends PluginSettingTab {
         // Down
         new ButtonComponent(ruleSettingDiv)
             .setButtonText('▼')
-            // .setIcon("down-arrow")
-            .setTooltip("Move Down")
+            .setTooltip("Move down")
             .setClass('cnb-rule-setting-item-down-button')
             .setDisabled(index == this.plugin.settings.colorRules.length - 1)
             .onClick(() => {
@@ -209,7 +207,6 @@ export class SettingsTab extends PluginSettingTab {
                     .onClick(() => {
                         this.plugin.settings.colorRules = this.plugin.settings.colorRules.filter((r) => r.id !== rule.id);
                         void this.plugin.saveSettings();
-                        this.plugin.removeStyle(rule);
                         ruleSettingDiv.remove();
                     });
             });
