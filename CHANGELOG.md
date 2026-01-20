@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5 (2026.01.20)
+
+- Fix settings window layout issues.
+
 ## 1.0.4 (2026.01.20)
 
 - Added AGENTS.md with agent guidelines and project scratchpad.

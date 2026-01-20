@@ -19,7 +19,7 @@
 .cnb-rules-header,
 .cnb-rule-row {
     display: grid;
-    grid-template-columns: 7em 1fr 8em 4em auto auto;
+    grid-template-columns: 7em minmax(8em, 1fr) 8em 4em 4.5em 2em;
     gap: 0.5em;
     align-items: center;
     padding: 0.4em 0;
@@ -61,7 +61,7 @@
 }
 
 .cnb-alpha-input {
-    width: 3.5em !important;
+    width: 100% !important;
     text-align: center;
 }
 
