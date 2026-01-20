@@ -6,52 +6,70 @@
     background-blend-mode: normal;
 }
 
-.cnb-rules-container {
-	margin-bottom: 1em;
-	border-top: 1px solid var(--background-modifier-border);
+/* Settings panel */
+.cnb-settings p.setting-item-description {
+    margin-bottom: 1em;
+    color: var(--text-muted);
 }
 
-.cnb-rule-setting-item,
-.cnb-rule-setting-item:first-child {
-	padding: 0.35em 0;
-	justify-content: center;
-	border-top: 1px solid var(--background-modifier-border);
+.cnb-rules-table {
+    margin-bottom: 1em;
 }
 
-.cnb-rule-setting-item .setting-item-info {
-	display: none;
-}
-.cnb-rule-setting-item .setting-item-control {
-	flex: none;
-}
-
-.cnb-rule-settings-header-row {
-	display: grid;
-	grid-template-columns: 1.2fr 1.5fr 1.5fr 1.2fr 0.5fr 0.5fr 0.5fr;
-	font-weight: bold;
-	align-items: center;
-	margin-bottom: 10px;
+.cnb-rules-header,
+.cnb-rule-row {
+    display: grid;
+    grid-template-columns: 7em 1fr 8em 4em auto auto;
+    gap: 0.5em;
+    align-items: center;
+    padding: 0.4em 0;
 }
 
-.cnb-rule-settings-header-row span {
+.cnb-rules-header {
+    font-weight: 600;
+    font-size: var(--font-ui-smaller);
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding-bottom: 0.5em;
+    margin-bottom: 0.25em;
+}
+
+.cnb-rule-row:hover {
+    background: var(--background-modifier-hover);
+    border-radius: var(--radius-s);
+}
+
+.cnb-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+}
+
+.cnb-cell input[type="text"],
+.cnb-cell .dropdown {
+    width: 100%;
+}
+
+.cnb-color-cell {
+    gap: 0.5em;
+}
+
+.cnb-color-input {
+    width: 5.5em !important;
+    font-family: var(--font-monospace);
+    font-size: var(--font-ui-smaller);
+}
+
+.cnb-alpha-input {
+    width: 3.5em !important;
     text-align: center;
 }
 
-.cnb-rule-settings-row {
-	display: grid;
-	grid-template-columns: 1.2fr 1.5fr 1.5fr 1.2fr 0.5fr 0.5fr 0.5fr;
-	align-items: center;
+.cnb-priority-cell {
+    gap: 0.125em;
 }
 
-.cnb-rule-type-dropdown {
-	width: 10em;
-}
-.cnb-rule-value-input {
-	width: 10em;
-}
-.cnb-rule-setting-item-text-input {
-	width: 6em;
-}
-.cnb-rule-alpha-input {
-    width: 4em;
+.cnb-priority-cell button,
+.cnb-delete-cell button {
+    padding: 4px 6px;
 }

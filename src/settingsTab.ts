@@ -55,84 +55,88 @@ export class SettingsTab extends PluginSettingTab {
     display(): void {
         const { containerEl } = this;
         containerEl.empty();
-        new Setting(containerEl).setName('Note background rules').setHeading();
+        containerEl.addClass('cnb-settings');
 
-        // Create a header row
-        const headerRow = containerEl.createEl('div', { cls: 'cnb-rule-settings-header-row' });
+        // Description
+        containerEl.createEl('p', {
+            text: 'Add rules to color note backgrounds. Rules are matched in order—first match wins (priority).',
+            cls: 'setting-item-description'
+        });
 
-        // Add labels for each column
-        headerRow.createEl('span', { text: 'Rule type', cls: 'cnb-rule-settings-column-rule-type' });
-        headerRow.createEl('span', { text: 'Value', cls: 'cnb-rule-settings-column-rule-value' });
-        headerRow.createEl('span', { text: 'Color', cls: 'cnb-rule-settings-column-rule-color' });
-        headerRow.createEl('span', { text: 'Alpha', cls: 'cnb-rule-settings-column-rule-alpha' });
-        headerRow.createEl('span', { text: '', cls: 'cnb-rule-settings-column-rule-button' });
+        // Rules table
+        const table = containerEl.createEl('div', { cls: 'cnb-rules-table' });
 
-        const rulesContainer = containerEl.createEl('div', { cls: 'cnb-rules-container' });
+        // Header
+        const header = table.createEl('div', { cls: 'cnb-rules-header' });
+        header.createEl('span', { text: 'Type' });
+        header.createEl('span', { text: 'Value' });
+        header.createEl('span', { text: 'Color' });
+        header.createEl('span', { text: 'Alpha' });
+        header.createEl('span', { text: 'Priority' });
+        header.createEl('span', { text: '' });
 
-        // Display existing rules
-        this.plugin.settings.colorRules.forEach((rule, index) => this.addRuleSetting(rulesContainer, rule, index));
+        // Rules container
+        const rulesContainer = table.createEl('div', { cls: 'cnb-rules-body' });
+        this.renderRules(rulesContainer);
 
-        // Add new rule button
-        new ButtonComponent(containerEl)
-            .setButtonText('Add new rule')
-            .onClick(() => {
-                const newRule: ColorRule = {
-                    id: Date.now().toString(),
-                    value: '',
-                    type: RuleType.Folder,
-                    color: '#000000',
-                    alpha: 0.04,
-                };
-                this.plugin.settings.colorRules.push(newRule);
-                this.addRuleSetting(rulesContainer, newRule);
-                void this.plugin.saveSettings();
+        // Add button
+        new Setting(containerEl)
+            .addButton((btn) => {
+                btn.setButtonText('Add rule')
+                    .setCta()
+                    .onClick(() => {
+                        const newRule: ColorRule = {
+                            id: Date.now().toString(),
+                            value: '',
+                            type: RuleType.Folder,
+                            color: '#3b82f6',
+                            alpha: 0.04,
+                        };
+                        this.plugin.settings.colorRules.push(newRule);
+                        void this.plugin.saveSettings();
+                        this.renderRules(rulesContainer);
+                    });
             });
     }
 
-    addRuleSetting(
-        containerEl: HTMLElement,
-        rule: ColorRule,
-        index: number = this.plugin.settings.colorRules.length - 1,
-    ): void {
-        const ruleSettingDiv = containerEl.createEl('div', { cls: 'cnb-rule-settings-row' });
+    renderRules(container: HTMLElement): void {
+        container.empty();
+        this.plugin.settings.colorRules.forEach((rule, index) => {
+            this.addRuleRow(container, rule, index);
+        });
+    }
 
-        // Type
-        new Setting(ruleSettingDiv)
-            .setClass('cnb-rule-setting-item')
-            .addDropdown((dropdown: DropdownComponent) => {
-                dropdown.addOption(RuleType.Folder, 'Folder');
-                dropdown.addOption(RuleType.Frontmatter, 'Frontmatter');
-                dropdown.setValue(rule.type);
-                dropdown.onChange((value) => {
-                    rule.type = value as RuleType;
-                    void this.plugin.saveSettings();
-                });
-                dropdown.selectEl.classList.add('cnb-rule-type-dropdown');
+    addRuleRow(container: HTMLElement, rule: ColorRule, index: number): void {
+        const row = container.createEl('div', { cls: 'cnb-rule-row' });
+
+        // Type dropdown
+        const typeCell = row.createEl('div', { cls: 'cnb-cell' });
+        new DropdownComponent(typeCell)
+            .addOption(RuleType.Folder, 'Folder')
+            .addOption(RuleType.Frontmatter, 'Frontmatter')
+            .setValue(rule.type)
+            .onChange((value) => {
+                rule.type = value as RuleType;
+                void this.plugin.saveSettings();
             });
 
-        // Value
-        new Setting(ruleSettingDiv)
-            .setClass('cnb-rule-setting-item')
-            .addText((text) => {
-                text.setPlaceholder('Enter rule value');
-                text.setValue(rule.value);
-                text.onChange((value) => {
-                    rule.value = value;
-                    void this.plugin.saveSettings();
-                });
-                text.inputEl.classList.add('cnb-rule-value-input');
+        // Value input
+        const valueCell = row.createEl('div', { cls: 'cnb-cell' });
+        new TextComponent(valueCell)
+            .setPlaceholder(rule.type === RuleType.Folder ? 'Folder name' : 'key: value')
+            .setValue(rule.value)
+            .onChange((value) => {
+                rule.value = value;
+                void this.plugin.saveSettings();
             });
 
-        // Color
-        const colorSetting = new Setting(ruleSettingDiv)
-            .setClass('cnb-rule-setting-item');
-
-            const colorInput = new TextComponent(colorSetting.controlEl)
-            .setPlaceholder('Enter color hex code')
+        // Color picker
+        const colorCell = row.createEl('div', { cls: 'cnb-cell cnb-color-cell' });
+        const colorInput = new TextComponent(colorCell)
             .setValue(rule.color);
-        colorInput.inputEl.classList.add('cnb-rule-setting-item-text-input');
+        colorInput.inputEl.addClass('cnb-color-input');
 
-        const picker = new ColorComponent(colorSetting.controlEl)
+        const picker = new ColorComponent(colorCell)
             .setValue(rule.color)
             .onChange((color) => {
                 rule.color = color;
@@ -148,67 +152,57 @@ export class SettingsTab extends PluginSettingTab {
             }
         });
 
-        // Alpha
-        new Setting(ruleSettingDiv)
-            .setClass('cnb-rule-setting-item')
-            .addText((text) => {
-            text.setPlaceholder('Alpha (0.0 - 1.0)');
-            text.setValue(rule.alpha?.toString() ?? '1.0');
-            text.inputEl.type = 'number';
-            text.inputEl.step = '0.001';
-            text.inputEl.min = '0';
-            text.inputEl.max = '1';
-            text.onChange((value) => {
-                const num = parseFloat(value);
-                if (!isNaN(num) && num >= 0 && num <= 1) {
+        // Alpha input
+        const alphaCell = row.createEl('div', { cls: 'cnb-cell' });
+        const alphaInput = new TextComponent(alphaCell)
+            .setValue(rule.alpha?.toString() ?? '0.04');
+        alphaInput.inputEl.type = 'number';
+        alphaInput.inputEl.step = '0.01';
+        alphaInput.inputEl.min = '0';
+        alphaInput.inputEl.max = '1';
+        alphaInput.inputEl.addClass('cnb-alpha-input');
+        alphaInput.onChange((value) => {
+            const num = parseFloat(value);
+            if (!isNaN(num) && num >= 0 && num <= 1) {
                 rule.alpha = num;
                 void this.plugin.saveSettings();
-                }
-            });
-            text.inputEl.classList.add('cnb-rule-alpha-input');
-            });
+            }
+        });
 
-        // Up
-        new ButtonComponent(ruleSettingDiv)
-            .setButtonText('▲')
-            .setTooltip("Move up")
-            .setClass('cnb-rule-setting-item-up-button')
-            .setDisabled(index == 0)
+        // Priority buttons (up/down)
+        const priorityCell = row.createEl('div', { cls: 'cnb-cell cnb-priority-cell' });
+
+        new ButtonComponent(priorityCell)
+            .setIcon('chevron-up')
+            .setTooltip('Move up (higher priority)')
+            .setDisabled(index === 0)
             .onClick(() => {
-                if (index > 0) {
-                    this.plugin.settings.colorRules.splice(index, 1);
-                    this.plugin.settings.colorRules.splice(index - 1, 0, rule);
-                    void this.plugin.saveSettings();
-                    this.display();
-                }
+                this.plugin.settings.colorRules.splice(index, 1);
+                this.plugin.settings.colorRules.splice(index - 1, 0, rule);
+                void this.plugin.saveSettings();
+                this.renderRules(container);
             });
 
-        // Down
-        new ButtonComponent(ruleSettingDiv)
-            .setButtonText('▼')
-            .setTooltip("Move down")
-            .setClass('cnb-rule-setting-item-down-button')
-            .setDisabled(index == this.plugin.settings.colorRules.length - 1)
+        new ButtonComponent(priorityCell)
+            .setIcon('chevron-down')
+            .setTooltip('Move down (lower priority)')
+            .setDisabled(index === this.plugin.settings.colorRules.length - 1)
             .onClick(() => {
-                if (index < this.plugin.settings.colorRules.length - 1) {
-                    this.plugin.settings.colorRules.splice(index, 1);
-                    this.plugin.settings.colorRules.splice(index + 1, 0, rule);
-                    void this.plugin.saveSettings();
-                    this.display();
-                }
+                this.plugin.settings.colorRules.splice(index, 1);
+                this.plugin.settings.colorRules.splice(index + 1, 0, rule);
+                void this.plugin.saveSettings();
+                this.renderRules(container);
             });
 
-        // Remove
-        new Setting(ruleSettingDiv)
-            .setClass('cnb-rule-setting-item-remove')
-            .addExtraButton((btn) => {
-                btn.setIcon('cross')
-                    .setTooltip('Remove')
-                    .onClick(() => {
-                        this.plugin.settings.colorRules = this.plugin.settings.colorRules.filter((r) => r.id !== rule.id);
-                        void this.plugin.saveSettings();
-                        ruleSettingDiv.remove();
-                    });
+        // Delete button
+        const deleteCell = row.createEl('div', { cls: 'cnb-cell cnb-delete-cell' });
+        new ButtonComponent(deleteCell)
+            .setIcon('x')
+            .setTooltip('Delete rule')
+            .onClick(() => {
+                this.plugin.settings.colorRules = this.plugin.settings.colorRules.filter((r) => r.id !== rule.id);
+                void this.plugin.saveSettings();
+                this.renderRules(container);
             });
     }
 }
