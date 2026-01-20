@@ -1,6 +1,6 @@
 {
     "name": "colorful-note-background",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Set note background based on file location or frontmatter metadata.",
     "main": "main.js",
     "scripts": {

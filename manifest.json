@@ -1,7 +1,7 @@
 {
 	"id": "colorful-note-background",
 	"name": "Colorful Note Background",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"minAppVersion": "0.15.0",
 	"description": "Set note background based on file location or frontmatter metadata.",
 	"author": "andresgongora",
