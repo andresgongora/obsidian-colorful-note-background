@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6 (2026.01.22)
+
+- Update LICENSE file for current year.
+
 ## 1.0.5 (2026.01.20)
 
 - Fix settings window layout issues.
