@@ -21,17 +21,17 @@ background colors instead—providing a less intrusive visual distinction.
 
 ### From Community Plugins
 
-1. Open Settings → Community plugins
-2. Disable Safe mode if prompted
-3. Click Browse and search for "Colorful Note Background"
-4. Install and enable the plugin
+1. Open Settings → Community plugins.
+2. Disable Safe mode if prompted.
+3. Click Browse and search for "Colorful Note Background".
+4. Install and enable the plugin.
 
 ### Using BRAT
 
-1. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat) from Community Plugins
-2. Run command: **BRAT: Add a beta plugin for testing**
-3. Enter: `https://github.com/andresgongora/obsidian-colorful-note-background`
-4. Enable the plugin in Settings → Community plugins
+1. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat) from Community Plugins.
+2. Run command: **BRAT: Add a beta plugin for testing**.
+3. Enter: `https://github.com/andresgongora/obsidian-colorful-note-background`.
+4. Enable the plugin in Settings → Community plugins.
 
 ## How It Works
 
@@ -44,10 +44,13 @@ Rules are evaluated in order—the first matching rule applies.
 
 ## Configuration
 
+For best result, use subtle colors with low alpha values to avoid overpowering note content. This
+can guide you through your vault by letting you subtly recognize note types without distractions.
+
 Go to Settings → Colorful Note Background to manage rules. Each rule has:
 
 | Field | Description |
-|-------|-------------|
+| ----- | ----------- |
 | Type | `Folder` or `Frontmatter` |
 | Value | Folder name or `key: value` for frontmatter |
 | Color | Background color (hex) |
@@ -58,4 +61,3 @@ Use the arrow buttons to reorder rules (priority) or the × to remove them.
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
-
