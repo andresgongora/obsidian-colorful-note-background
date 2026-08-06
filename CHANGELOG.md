@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Untracked `coverage/` from the repo; reports stay local, `.gitignore` covers `.agent/` and `coverage/`.
+- Raised test coverage for `main.ts` (45%→97% statements) and `settingsTab.ts` (80%→99% statements).
+- Added version, license, and minAppVersion badges to README.
+
 ## 1.0.6 (2026.01.22)
 
 - Update LICENSE file for current year.
@@ -12,10 +18,13 @@
 
 - Added AGENTS.md with agent guidelines and project scratchpad.
 - Refreshed README: concise overview, install options, config table.
-- Adopted ESLint v9 flat config with `eslint-plugin-obsidianmd` (sentence case, settings-tab rules, no forbidden elements).
+- Adopted ESLint v9 flat config with `eslint-plugin-obsidianmd` (sentence case,
+  settings-tab rules, no forbidden elements).
 - Removed dead code after CSS refactor: `removeStyle`, `updateStyles`, `updateStyle`, `makeStyleName`.
-- Switched styling to CSS custom properties: `.cnb-highlighted` + `--cnb-highlight-color` in styles.css (no dynamic style tags).
-- Fixed promise handling in settings UI via `void this.plugin.saveSettings()`; adjusted UI text to sentence case (e.g., “Move up/down”).
+- Switched styling to CSS custom properties: `.cnb-highlighted` +
+  `--cnb-highlight-color` in styles.css (no dynamic style tags).
+- Fixed promise handling in settings UI via `void this.plugin.saveSettings()`;
+  adjusted UI text to sentence case (e.g., "Move up/down").
 - Added null guard for `activeView.file` to satisfy strict typing.
 - Deleted deprecated `.eslintignore`; added `eslint.config.mjs`.
 
