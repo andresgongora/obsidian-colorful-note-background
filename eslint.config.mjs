@@ -15,8 +15,6 @@ export default defineConfig([
       parserOptions: { project: "./tsconfig.json" },
     },
     rules: {
-      // Example project-specific overrides can go here
-      // "obsidianmd/sample-names": "off",
       // Ease type-aware strict rules for this project
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-argument": "off",
