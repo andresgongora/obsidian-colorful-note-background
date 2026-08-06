@@ -117,18 +117,28 @@ export class SettingsTab extends PluginSettingTab {
             .setValue(rule.type)
             .onChange((value) => {
                 rule.type = value as RuleType;
+                updateValueValidity();
                 void this.plugin.saveSettings();
             });
 
         // Value input
         const valueCell = row.createEl('div', { cls: 'cnb-cell' });
-        new TextComponent(valueCell)
+        const valueInput = new TextComponent(valueCell)
             .setPlaceholder(rule.type === RuleType.Folder ? 'Folder name' : 'key: value')
             .setValue(rule.value)
             .onChange((value) => {
                 rule.value = value;
+                updateValueValidity();
                 void this.plugin.saveSettings();
             });
+
+        const updateValueValidity = (): void => {
+            const isInvalidFrontmatter =
+                rule.type === RuleType.Frontmatter && !rule.value.includes(':');
+            valueInput.inputEl.toggleClass('cnb-invalid-input', isInvalidFrontmatter);
+            valueInput.inputEl.toggleAttribute('aria-invalid', isInvalidFrontmatter);
+        };
+        updateValueValidity();
 
         // Color picker
         const colorCell = row.createEl('div', { cls: 'cnb-cell cnb-color-cell' });

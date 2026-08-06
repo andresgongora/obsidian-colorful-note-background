@@ -3,7 +3,6 @@ import { Plugin, TFile, MarkdownView, WorkspaceLeaf } from 'obsidian';
 import { SettingsTab, ColorBackgroundSettings, DEFAULT_SETTINGS, ColorRule, RuleType } from './settingsTab';
 
 export const checkPath = (currentPath: string, folder: string): boolean => {
-    // return currentPath.includes(folder);
     const parts = currentPath.split(/[/\\]/);
     return parts.includes(folder);
 }
@@ -11,6 +10,7 @@ export const checkPath = (currentPath: string, folder: string): boolean => {
 export function hexToRgbA(hex: string, alpha: number): string {
     let c = hex.replace('#', '');
     if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    if (!/^[0-9a-fA-F]{6}$/.test(c)) return `rgba(0,0,0,0)`;
     const num = parseInt(c, 16);
     const r = (num >> 16) & 255;
     const g = (num >> 8) & 255;
@@ -50,17 +50,14 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
     }
 
     onActiveLeafChange(activeLeaf: WorkspaceLeaf) {
-        // console.log("+ active leaf change: ", activeLeaf);
         this.applyRules();
     }
 
     onMetadataChange(file: TFile) {
-        // console.log("+ metadata change");
         this.applyRules(file);
     }
 
     onFileRename(file: TFile) {
-        // console.log("+ filename change");
         this.applyRules();
     }
 
@@ -97,22 +94,16 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
         switch (rule.type) {
             case RuleType.Folder: {
                 if (checkPath(file.path, rule.value)) {
-                    // console.log("- folder -", file);
-                    // console.log(file.path);
-                    // console.log(rule.value);
                     this.highlightNote(contentView, rule);
                     return true;
                 }
                 break;
             }
             case RuleType.Frontmatter: {
-                // console.log("- front-matter -", file);
-                // console.log(rule.value);
                 const [key, value] = rule.value.split(":", 2);
                 const frontMatterValue = this.app.metadataCache.getFileCache(file)?.frontmatter?.[key];
                 const normalizedFrontMatterValue = frontMatterValue?.toString().toLowerCase().trim();
                 const normalizedValueToHighlight = value?.toString().toLowerCase().trim();
-                // console.log(`++ front matter: ${key}, ${value} :: ${normalizedFrontMatterValue} === ${normalizedValueToHighlight}`);
                 if (normalizedFrontMatterValue === normalizedValueToHighlight) {
                     this.highlightNote(contentView, rule);
                     return true;

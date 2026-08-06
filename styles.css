@@ -50,6 +50,10 @@
     width: 100%;
 }
 
+.cnb-invalid-input {
+    border-color: var(--text-error) !important;
+}
+
 .cnb-color-cell {
     gap: 0.5em;
 }
