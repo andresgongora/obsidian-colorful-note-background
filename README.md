@@ -1,8 +1,8 @@
 # Colorful Note Background
 
 [![GitHub release](https://img.shields.io/github/v/release/andresgongora/obsidian-colorful-note-background)](https://github.com/andresgongora/obsidian-colorful-note-background/releases)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Obsidian minAppVersion](https://img.shields.io/badge/obsidian-%E2%89%A51.0.0-7c3aed)](https://obsidian.md)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-tip-yellow)](https://buymeacoffee.com/YOUR_USERNAME)
 
 Colorful Note Background is an Obsidian plugin that tints a note's background color based on its
@@ -81,6 +81,12 @@ Colorful Note Background is a fork of
 [obsidian-colorful-note-borders](https://github.com/rusi/obsidian-colorful-note-borders) by rusi.
 The original plugin outlines notes with colored borders; this fork replaces the border with a subtle
 background tint instead, for a less intrusive visual cue.
+
+<!------------------------------------------------------------------------------------------------->
+## Support
+<!------------------------------------------------------------------------------------------------->
+
+If this project helped you, consider [buying me a coffee](https://buymeacoffee.com/andresgongora).
 
 <!------------------------------------------------------------------------------------------------->
 ## License
