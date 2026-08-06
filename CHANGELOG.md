@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## 1.0.7 (2026.08.06)
 
+- Modernized tsconfig for TypeScript 6: removed deprecated `baseUrl`,
+  switched `moduleResolution` to `bundler` (matches esbuild).
 - Untracked `coverage/` from the repo; reports stay local, `.gitignore` covers `.agent/` and `coverage/`.
 - Raised test coverage for `main.ts` (45%→97% statements) and `settingsTab.ts` (80%→99% statements).
 - Added version, license, and minAppVersion badges to README.
