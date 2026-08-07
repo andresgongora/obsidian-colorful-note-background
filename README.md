@@ -83,10 +83,11 @@ The original plugin outlines notes with colored borders; this fork replaces the 
 background tint instead, for a less intrusive visual cue.
 
 <!------------------------------------------------------------------------------------------------->
-## Support
+## Donations
 <!------------------------------------------------------------------------------------------------->
 
-If this project helped you, consider [buying me a coffee](https://buymeacoffee.com/andresgongora).
+If you like this project and want to show your support,
+[buy me a coffee](https://buymeacoffee.com/andresgongora). Caffeine goes in, code comes out.
 
 <!------------------------------------------------------------------------------------------------->
 ## License
