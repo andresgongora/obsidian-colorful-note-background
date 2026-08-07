@@ -235,6 +235,8 @@ describe('plugin lifecycle and rule application', () => {
                     events[name] = callback;
                     return name;
                 }),
+                onLayoutReady: jest.fn((callback: () => void) => callback()),
+                getLeavesOfType: jest.fn().mockReturnValue([]),
             },
             metadataCache: { on: jest.fn((name, callback) => {
                 events[name] = callback;

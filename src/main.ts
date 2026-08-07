@@ -27,15 +27,22 @@ export default class ColorfulNoteBackgroundPlugin extends Plugin {
         // This adds a settings tab so the user can configure various aspects of the plugin
         this.addSettingTab(new SettingsTab(this.app, this));
 
-        this.registerEvent(
-            this.app.workspace.on("active-leaf-change", this.onActiveLeafChange.bind(this))
-        );
-        this.registerEvent(
-            this.app.metadataCache.on("changed", this.onMetadataChange.bind(this))
-        );
-        this.registerEvent(
-            this.app.vault.on("rename", this.onFileRename.bind(this))
-        );
+        this.app.workspace.onLayoutReady(() => {
+            this.registerEvent(
+                this.app.workspace.on("active-leaf-change", this.onActiveLeafChange.bind(this))
+            );
+            this.registerEvent(
+                this.app.metadataCache.on("changed", this.onMetadataChange.bind(this))
+            );
+            this.registerEvent(
+                this.app.vault.on("rename", this.onFileRename.bind(this))
+            );
+
+            // paint already-open leaves once layout settles; previously this
+            // relied on the metadataCache "changed" storm firing during vault
+            // init, which is exactly what deferring the listener now avoids.
+            this.applyRules();
+        });
     }
 
     onunload() {
