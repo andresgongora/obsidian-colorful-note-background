@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.9 (2026.08.07)
+
+- Hardened CI/CD workflows: added version verification, asset validation, changelog extraction.
+- Fixed LICENSE format for GitHub detection.
+
+## 1.0.8 (2026.08.07)
+
+- Fixed event registration: deferred to `onLayoutReady` for proper vault initialization.
+- Modernized build tooling: ES2020 tsconfig, Prettier formatting, Jest CJS config.
+- Added funding links: Buy Me A Coffee badge and `fundingUrl` in manifest.
+
 ## 1.0.7 (2026.08.06)
 
 - Modernized tsconfig for TypeScript 6: removed deprecated `baseUrl`,

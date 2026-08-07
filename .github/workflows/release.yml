@@ -80,8 +80,8 @@ jobs:
             found { print }
           ' CHANGELOG.md > release_notes.md
           if [ ! -s release_notes.md ]; then
-            echo "Warning: No changelog entry found for version $version"
-            echo "Release notes: (none)" > release_notes.md
+            echo "Error: No changelog entry found for version $version"
+            exit 1
           fi
 
       - name: Create release

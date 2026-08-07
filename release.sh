@@ -89,13 +89,21 @@ collectReleaseAssets() {
 ## @brief Extract the latest version section from CHANGELOG.md for the release body.
 extractLatestChangelog() {
     awk '
-        /^## \[Unreleased\]/ { skip=1; next }
-        /^## \[/ {
-            if (skip) { skip=0; found=1; print; next }
+        /^## \[Unreleased\]/ { next }
+        /^## \[?[0-9]/ {
             if (found) exit
+            found=1
         }
         found { print }
     ' "$CHANGELOG_FILE"
+}
+
+## @brief Abort if CHANGELOG.md has no entry for the given version.
+requireChangelogEntry() {
+    local version="$1"
+    local entry
+    entry="$(extractLatestChangelog)"
+    [[ -n "$entry" ]] || die "CHANGELOG.md has no entry for version $version"
 }
 
 ## @brief Create the GitHub release for the given version with the discovered assets.
@@ -122,10 +130,12 @@ main() {
     requireCleanWorkingTree
     verifyAndBuild
     bumpVersion
-    pushRelease
 
     local version
     version="$(readManifestVersion)"
+    requireChangelogEntry "$version"
+    pushRelease
+
     createGithubRelease "$version"
 }
 
