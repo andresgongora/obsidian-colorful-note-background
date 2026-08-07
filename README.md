@@ -59,7 +59,7 @@ Go to Settings → Colorful Note Background to manage rules. Each rule has:
 
 | Field | Description |
 | ----- | ----------- |
-| Type | `Folder` or `Frontmatter` |
+| Type  | `Folder` or `Frontmatter` |
 | Value | Folder name or `key: value` for frontmatter |
 | Color | Background color (hex) |
 | Alpha | Transparency (0–1, recommended: 0.04) |
