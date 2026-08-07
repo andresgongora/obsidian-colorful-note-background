@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.10 (2026.08.07)
+
+- Removed `!important` from CSS rules, increased selector specificity instead.
+
 ## 1.0.9 (2026.08.07)
 
 - Hardened CI/CD workflows: added version verification, asset validation, changelog extraction.
