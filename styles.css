@@ -51,21 +51,21 @@
 }
 
 .cnb-invalid-input {
-    border-color: var(--text-error) !important;
+    border-color: var(--text-error);
 }
 
 .cnb-color-cell {
     gap: 0.5em;
 }
 
-.cnb-color-input {
-    width: 5.5em !important;
+.cnb-color-cell .cnb-color-input {
+    width: 5.5em;
     font-family: var(--font-monospace);
     font-size: var(--font-ui-smaller);
 }
 
-.cnb-alpha-input {
-    width: 100% !important;
+.cnb-cell .cnb-alpha-input {
+    width: 100%;
     text-align: center;
 }
 
