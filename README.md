@@ -3,7 +3,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/andresgongora/obsidian-colorful-note-background)](https://github.com/andresgongora/obsidian-colorful-note-background/releases)
 [![Obsidian minAppVersion](https://img.shields.io/badge/obsidian-%E2%89%A51.0.0-7c3aed)](https://obsidian.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-tip-yellow)](https://buymeacoffee.com/YOUR_USERNAME)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-tip-yellow)](https://buymeacoffee.com/andresgongora)
 
 Colorful Note Background is an Obsidian plugin that tints a note's background color based on its
 folder or its frontmatter metadata. Set a rule once and every matching note carries a subtle,
