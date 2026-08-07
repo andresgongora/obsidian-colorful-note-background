@@ -3,7 +3,7 @@ name: Release Obsidian plugin
 on:
   push:
     tags:
-      - "*"
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   build:
@@ -13,15 +13,50 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: "20.x"
+
+      - name: Extract tag
+        id: tag
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          if [ -z "$tag" ]; then
+            echo "Error: Could not extract tag from GITHUB_REF: $GITHUB_REF"
+            exit 1
+          fi
+          echo "version=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Verify tag matches manifest.json
+        run: |
+          manifest_version="$(node -e "try { console.log(require('./manifest.json').version) } catch(e) { console.error('Failed to parse manifest.json:', e.message); process.exit(1) }")"
+          tag="${{ steps.tag.outputs.version }}"
+          if [ "$tag" != "$manifest_version" ]; then
+            echo "Error: Tag '$tag' does not match manifest.json version '$manifest_version'"
+            exit 1
+          fi
+          echo "Tag $tag matches manifest.json"
+
       - name: Build plugin
         run: |
-          npm install
+          npm ci
+          npm run lint
+          npm test
           npm run build
+
+      - name: Verify release assets
+        run: |
+          for f in main.js manifest.json styles.css; do
+            if [ ! -f "$f" ]; then
+              echo "Error: Required asset '$f' not found"
+              exit 1
+            fi
+          done
+          echo "All release assets present"
+
       - name: Generate artifact attestation
         uses: actions/attest@v4
         with:
@@ -29,12 +64,33 @@ jobs:
             main.js
             manifest.json
             styles.css
+
+      - name: Extract changelog
+        id: changelog
+        run: |
+          version="${{ steps.tag.outputs.version }}"
+          # Extract section for this version from CHANGELOG.md
+          # Handles formats: ## 1.0.7, ## [1.0.7], ## v1.0.7, ## 1.0.7 (date)
+          awk -v ver="$version" '
+            /^## / {
+              if (found) exit
+              # Match: ## 1.0.7, ## [1.0.7], ## v1.0.7 (with optional brackets/v prefix)
+              if ($0 ~ "\\[?v?" ver "\\]?") { found=1; print; next }
+            }
+            found { print }
+          ' CHANGELOG.md > release_notes.md
+          if [ ! -s release_notes.md ]; then
+            echo "Warning: No changelog entry found for version $version"
+            echo "Release notes: (none)" > release_notes.md
+          fi
+
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          tag="${GITHUB_REF#refs/tags/}"
+          tag="${{ steps.tag.outputs.version }}"
           gh release create "$tag" \
             --title="$tag" \
+            --notes-file=release_notes.md \
             --draft \
             main.js manifest.json styles.css

@@ -86,17 +86,32 @@ collectReleaseAssets() {
     printf '%s\n' "${assets[@]}"
 }
 
+## @brief Extract the latest version section from CHANGELOG.md for the release body.
+extractLatestChangelog() {
+    awk '
+        /^## \[Unreleased\]/ { skip=1; next }
+        /^## \[/ {
+            if (skip) { skip=0; found=1; print; next }
+            if (found) exit
+        }
+        found { print }
+    ' "$CHANGELOG_FILE"
+}
+
 ## @brief Create the GitHub release for the given version with the discovered assets.
 createGithubRelease() {
     local version="$1"
     local -a assets=()
-    while IFS= read -r asset; do
+    while IFS read -r asset; do
         assets+=("$asset")
     done < <(collectReleaseAssets)
 
     [[ ${#assets[@]} -gt 0 ]] || die "no release assets found (expected manifest.json at minimum)"
 
-    gh release create "$version" -F "$CHANGELOG_FILE" "${assets[@]}"
+    local changelog_body
+    changelog_body="$(extractLatestChangelog)"
+
+    gh release create "$version" --title "$version" --notes "$changelog_body" "${assets[@]}"
 }
 
 ##==================================================================================================
