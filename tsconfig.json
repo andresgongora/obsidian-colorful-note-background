@@ -3,25 +3,19 @@
 		"inlineSourceMap": true,
 		"inlineSources": true,
 		"module": "ESNext",
-		"target": "ES6",
-		// "module": "CommonJS",
-		// "target": "ES2019",
-		// "strict": true,
-		// "allowJs": true,
-		// "skipLibCheck": true,
-		// "forceConsistentCasingInFileNames": true,
+		"target": "ES2020",
+		"allowJs": true,
 		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
 		"noImplicitAny": true,
 		"moduleResolution": "bundler",
 		"importHelpers": true,
 		"isolatedModules": true,
 		"strictNullChecks": true,
-		// "outDir": "./",
 		"lib": [
-		"DOM",
-		"ES5",
-		"ES6",
-		"ES7"
+			"DOM",
+			"ES2020"
 		]
 	},
 	"include": [
